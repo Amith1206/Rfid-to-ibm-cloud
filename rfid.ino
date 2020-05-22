@@ -208,6 +208,7 @@ void dump_byte_array(byte *buffer, byte bufferSize) {
   }
 }
 void publishData() {
+ /*
  String payload = String(count1);
  payload += millis() / 1000;
  payload += "}}";
@@ -218,6 +219,23 @@ void publishData() {
    Serial.println("Publish OK");
  } else {
    Serial.println("Publish FAILED");
+ }
+}*/
+ StaticJsonBuffer<500> jsonBuffer;
+ JsonObject& root = jsonBuffer.createObject();
+ JsonObject& data = root.createNestedObject("data");
+ data["count1"] = count1;
+ data["count2"] = count2;
+ data["count3"] = count3;
+ data["count4"] = count4;
+
+ char bufferer[500];
+ root.printTo(bufferer, sizeof(bufferer));
+ Serial.println("Sending data:"); Serial.println(bufferer);
+ if (client.publish(publishTopic, bufferer)) {
+   Serial.println("Publish OK");
+ } else {
+   Serial.print("Publish FAILED");
  }
 }
 
